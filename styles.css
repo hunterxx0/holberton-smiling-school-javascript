@@ -1,0 +1,231 @@
+@font-face {
+    font-family: "holberton_school-icon";
+    src: url("fonts/holberton_school-icon.eot");
+    src: url("fonts/holberton_school-icon.woff") format("woff"),
+    url("fonts/holberton_school-icon.ttf") format("ttf"),
+    url("fonts/holberton_school-icon.svg") format("svg");
+}
+h1, h2, h3, h4, h5, h6, a, p, span {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+h1 {
+    font-size: 65px;
+}
+h3 {
+    font-size: 20px;
+}
+html {
+    overflow-x: hidden;
+}
+body {
+    background-color: #071629;
+    background-size: 100%, auto;
+    background-repeat: no-repeat;
+}
+body.main {
+    background-image: url(images/pic_1.jpg);
+}
+body.pricing {
+    background-image: url(images/pic_2.jpg);
+}
+body.courses {
+    background-image: url(images/pic_3.jpg);
+}
+.coiny-heading {
+    font-family: Coiny;
+    font-size: 30px;
+}
+nav a {
+    font-size: 12px;
+}
+.lavender {
+    color: #C271FF;
+}
+.bg-white {
+    background-color: white;
+}
+.bg-lavender {
+    background-color: #c371ff;
+}
+.bg-indigo {
+    background-color: #071629;
+}
+.play-button-icon {
+  display: block;
+  position: absolute;
+  left: calc(50% - 50px);
+  top: calc(50% - 180px);
+  text-align: center;
+  width: 10px;
+  height: 10px;
+}
+.play-button-icon i{
+    width: 100px;
+    height: 100px;
+    color: #C271FF;
+    background-color: #fff;
+    border-radius: 50px;
+    font-size: 25px;
+    line-height: 100px;
+    text-align: center;
+    opacity: 0.7;
+}
+.play-tuto {
+    margin-top: 45px;
+}
+@media (max-width: 768px) {
+    .vid-sec .car-item > div, .latest-vids .latest-item > div {
+        display: none;
+    }
+    .vid-sec .car-item > div:first-child, .latest-vids .latest-item > div:first-child {
+        display: block;
+    }
+}
+
+.vid-sec .car-item.active,
+.vid-sec .carousel-item-next,
+.vid-sec .carousel-item-prev,
+.latest-vids .latest-item.active,
+.latest-vids .carousel-item-next,
+.latest-vids .carousel-item-prev {
+    display: flex;
+}
+/* display 3 */
+@media (min-width: 768px) {
+    
+    .vid-sec .carousel-item-right.active,
+    .vid-sec .carousel-item-next,
+    .latest-vids .carousel-item-right.active,
+    .latest-vids .carousel-item-next {
+      transform: translateX(33.333%);
+    }
+    
+    .vid-sec .carousel-item-left.active, 
+    .vid-sec .carousel-item-prev,
+    .latest-vids .carousel-item-left.active, 
+    .latest-vids .carousel-item-prev {
+      transform: translateX(-33.333%);
+    }
+}
+.vid-sec .carousel-item-right,
+.vid-sec .carousel-item-left,
+.latest-vids .carousel-item-right,
+.latest-vids .carousel-item-left { 
+  transform: translateX(0);
+}
+.car-prev, .car-next {
+    color: black;
+    font-size: 100px;
+    opacity: 0.2;
+}
+@media (min-width: 1200px){
+    .car-prev {
+        margin-left: -220px;
+    }
+    .car-next {
+        margin-right: -220px;
+    }
+}
+@media (min-width: 1000px){
+    .car-prev {
+        margin-left: -180px;
+    }
+    .car-next {
+        margin-right: -180px;
+    }
+}
+img.circle-thumb {
+    width: 150px;
+    height: 150px;
+}
+img.circle-thumb-small {
+    width: 50px;
+    height: 50px;
+}
+img.slogo {
+    height: 50px;
+}
+img.star {
+    height: 15px;
+    width: 15px;
+}
+.navbar-brand img, .zlogo {
+    height: 30px;
+}
+.small {
+    font-size: 13px;
+}
+.video-card {
+    width: 250px;
+}
+
+.holberton-icon {
+    font-family: 'holberton_school-icon';
+    font-size: 25px;
+}
+a {
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: none;
+}
+.search-widget {
+    background-color: #d195ff;
+    border-radius: 3px;
+}
+.search-icon {
+    font-family: 'holberton_school-icon';
+    font-size: 15px;
+}
+#search-button {
+    text-decoration: none;
+}
+.loader {
+    border: 10px solid #f3f3f3;
+    border-top: 10px solid #C271FF;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    animation: spin 2s linear infinite;
+    margin: auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@media (min-width: 480px){
+    .navbar-expand-custom {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+    }
+    .navbar-expand-custom ul {
+        margin-left: 50%;
+    }
+    .navbar-expand-custom ul li{
+        margin-right: 20%;
+        margin-left: 20%;
+    }
+    .navbar-expand-custom .navbar-nav {
+        flex-direction: row;
+    }
+    .navbar-expand-custom .navbar-nav .nav-link {
+        padding-right: .5rem;
+        padding-left: .5rem;
+    }
+        .navbar-expand-custom .navbar-collapse {
+        display: flex!important;
+    }
+    .navbar-expand-custom .navbar-toggler {
+        display: none;
+    }
+}
+@media (max-width: 800px){
+    .video-card {
+        left: 7%;
+        width: 80%;
+        min-width: 250px;
+    }
+}

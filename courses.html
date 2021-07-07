@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>SmileSchool</title>
+    <meta name="description" content="Implement a design from scratch">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Coiny&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+    
+    
+    <link rel="stylesheet" type="text/css" media="screen" href="styles.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="scripts.js"></script>
+    
+  </head>
+  <body class="container-fluid p-0 m-0 courses">
+    <header class="container-fluid text-center">
+      <nav class="navbar navbar-expand-custom navbar-dark mt-3 mb-5 pb-5">
+        <button class="navbar-toggler bg-transparent border-0 text-decoration-none" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-header col col-sm-0 col-md-3">
+          <a class="navbar-brand text-white font-weight-bold" href="homepage.html">
+            <img class="logo" src="images/smile_off.png"/>
+            <img class="logo ml-2" src="images/logo.png"/>
+          </a>
+        </div>
+        <div class="navbar-collapse collapse" id="collapsingNavbar">
+          <ul class="navbar-nav justify-content-space-between ">
+            <li class="nav-item">
+              <a href="courses.html" class="text-white text-center">COURSES</a>
+            </li>
+            <li class="nav-item">
+              <a href="pricing.html" class="text-white text-center">PRICING</a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="text-white text-center">LOGIN</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <main class="p-0 m-0">
+			<section id="hero-section" class="col-12 text-center mb-4 text-white">
+				<div>
+					<h1 class="font-weight-bold coiny-heading">« Don't cry because it's over.<br/><span class="coiny-heading lavender">Smile</span> because it happened. »</h1>
+				</div>
+			</section>
+      <section id="searchbar-section" class="text-white bg-lavender pt-5 px-5 pb-5 mb-5">
+        <div class="row justify-content-center align-items-start">
+          <div class="col-sm-12 col-md-4 mt-3">
+            <p>KEYWORDS</p>
+            <div class="search-widget border-bottom mt-0 mb-4">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                 <button id="search-button" type="submit" class="btn btn-link text-white"><span class="search-icon"></span></button>
+                </div>
+                <input type="search" placeholder="Search by keywords" aria-describedby="search-button" class="form-control border-0 search-widget text-muted" id="searchValue">
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4 mt-3">
+            <p>TOPIC</p>
+            <div class="search-widget border-bottom mt-0 mb-4">
+              <select class="topic custom-select search-widget text-white border-0" id="sear1">
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4 mt-3">
+            <p>SORT BY</p>
+            <div class="search-widget border-bottom mt-0 mb-4">
+              <select class="sorting custom-select search-widget text-white border-0" id="sear2">
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="searchresults-section" class="text-left bg-white">
+        <p class="results mx-2 text-secondary"></p>
+        <div class="res-vids row justify-content-start">
+        </div>
+     </section>
+     <footer class="page-footer font-small bg-indigo text-white">
+        <div class="container-fluid text-center">
+          <div class="row align-items-center justify-content-space-between mt-4">
+            <div class="col-sm-3 ml-5">
+              <a class="navbar-brand text-white font-weight-bold" href="#"><img class="logo mr-4" src="images/smile_off.png"/><img class="logo" src="images/logo.png"/></a>
+            </div>
+            <div class="col-sm-3 ml-auto">
+              <div class="list-unstyled d-flex justify-content-center my-4">
+                <div>
+                  <a href="#"><span class="holberton-icon text-white font-weight-normal m-2"></span></a>
+                </div>
+                <div>
+                  <a href="#"><span class="holberton-icon text-white font-weight-normal m-2"></span></a>
+                </div>
+                <div>
+                  <a href="#"><span class="holberton-icon text-white font-weight-normal m-2"></span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="footer-copyright text-center py-4 text-secondary">
+            <small>© smileschool 2021</small>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </body>
+</html>

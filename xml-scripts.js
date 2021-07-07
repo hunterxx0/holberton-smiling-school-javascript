@@ -1,0 +1,460 @@
+function xml2json(xml) {
+	try {
+		var obj = {};
+	    if (xml.children.length > 0) {
+	    	for (var i = 0; i < xml.children.length; i++) {
+		        var item = xml.children.item(i);
+		        var nodeName = item.nodeName;
+		        if (typeof (obj[nodeName]) == "undefined") {
+		          obj[nodeName] = xml2json(item);
+		        } else {
+		        	if (typeof (obj[nodeName].push) == "undefined") {
+			            var old = obj[nodeName];
+			            obj[nodeName] = [];
+			            obj[nodeName].push(old);
+			        }
+			        obj[nodeName].push(xml2json(item));
+			    }
+			}
+		} else {
+		    obj = xml.textContent;
+		}
+		return obj;
+	} catch (e) {
+		console.log(e.message);
+	}
+}
+
+function getCourses(q = "", topic = "all", sor = "most popular") {
+	url = "https://smileschool-api.hbtn.info/xml/courses?q=" + q + "&topic=" + topic + "&sort=" + sor;
+	$.ajax({
+		type: "GET",
+		url: url,
+		beforeSend: function () {
+			$( "#searchresults-section" ).css('display', 'none');
+			refreshing(true);
+		},
+		complete: function () {
+			refreshing(false);
+			$( "#searchresults-section" ).css('display', 'initial');
+		},
+		success: function (xml) {
+	        $( ".res-vids" ).empty();
+	        $(".sorting").empty();
+	        $(".topic").empty();
+	        let x = 0;
+			var json = xml2json(xml);
+			$xml = $(xml);
+      		var idsList = [];
+			var cours = $xml.find('course')
+			for (i=0; i<cours.length; i++) {
+				var idStar = {
+					'id': $xml.find( 'course ').eq(i).attr("id"),
+					'star': $xml.find( 'course ').eq(i).attr("star"),
+					'views': $xml.find( 'course ').eq(i).attr("views"),
+					'published_at': $xml.find( 'course ').eq(i).attr("published_at"),
+				}
+      			idsList.push(idStar);
+			}
+			ids = json.result.courses.course;
+			sorts = json.result.sorts.sort;
+			topics = json.result.topics.topic;
+			setTopSor(topics, sorts, ids.length);
+			for ( let i in ids ) {
+	        	ids[i]["id"] = idsList[i]["id"];
+	        	ids[i]["star"] = idsList[i]["star"];
+	        	ids[i]["views"] = idsList[i]["views"];
+	        	ids[i]["published_at"] = idsList[i]["published_at"];
+	        	ids[i]["x"] = x;
+	        	ids[i]["type"] = "tutos";        	
+	            setResults(ids[i]);
+	            x++;
+	        }
+		},
+		fail: function () {
+			console.log("failed");
+		},
+	});
+}
+function getQuotes() {
+	$.ajax({
+		type: "GET",
+		url: "https://smileschool-api.hbtn.info/xml/quotes",
+		dataType: "xml",
+		beforeSend: function () {
+			$( "#testim-slide" ).css('display', 'none');
+			refreshing(true);
+		},
+		complete: function () {
+			refreshing(false);
+			$( "#testim-slide" ).css('display', 'initial');
+		},
+		success: function (xml) {
+			let x = 0;
+			var json = xml2json(xml);
+			$xml = $(xml);
+      		var idsList = [];
+			var vids = $xml.find( 'quote')
+			for (i=0; i<vids.length; i++) {
+				var idStar = {
+					'id': $xml.find( 'quote ').eq(i).attr("id"),
+				}
+      			idsList.push(idStar);
+			}
+			ids = json.quotes.quote;
+			for ( let i in ids ) {
+	        	ids[i]["id"] = idsList[i]["id"];
+	        	ids[i]["x"] = x;
+	        	ids[i]["type"] = "tutos";        	
+	            addQuotes(ids[i]);
+	            x++;
+	        }
+	    }
+	})
+}
+function getTutos() {
+	$.ajax({
+		type: "GET",
+		url: "https://smileschool-api.hbtn.info/xml/popular-tutorials",
+		dataType: "xml",
+		success: function (xml) {
+			let x = 0;
+			var json = xml2json(xml);
+			$xml = $(xml);
+      		var idsList = [];
+			var vids = $xml.find( 'video ')
+			for (i=0; i<vids.length; i++) {
+				var idStar = {
+					'id': $xml.find( 'video ').eq(i).attr("id"),
+					'star': $xml.find( 'video ').eq(i).attr("star")
+				}
+      			idsList.push(idStar);
+			}
+			ids = json.videos.video;
+			for ( let i in ids ) {
+	        	ids[i]["id"] = idsList[i]["id"];
+	        	ids[i]["star"] = idsList[i]["star"];
+	        	ids[i]["x"] = x;
+	        	ids[i]["type"] = "tutos";        	
+	            addVids(ids[i]);
+	            x++;
+	        }
+	        manCarous("tutos");
+		}
+	});
+}
+function getLatest() {
+	$.ajax({
+		type: "GET",
+		url: "https://smileschool-api.hbtn.info/xml/latest-videos",
+		dataType: "xml",
+		success: function (xml) {
+			let x = 0;
+			var json = xml2json(xml);
+			$xml = $(xml);
+      		var idsList = [];
+			var vids = $xml.find( 'video ')
+			for (i=0; i<vids.length; i++) {
+				var idStar = {
+					'id': $xml.find( 'video ').eq(i).attr("id"),
+					'star': $xml.find( 'video ').eq(i).attr("star")
+				}
+      			idsList.push(idStar);
+			}
+			ids = json.videos.video;
+			for ( let i in ids ) {
+	        	ids[i]["id"] = idsList[i]["id"];
+	        	ids[i]["star"] = idsList[i]["star"];
+	        	ids[i]["x"] = x;
+	        	ids[i]["type"] = "latest";        	
+	            addVids(ids[i]);
+	            x++;
+	        }
+	        manCarous("latest");
+		}
+	});
+}
+function refreshing(status) {
+	if ( status ) {
+		var ctr = document.createElement('div');
+		ctr.setAttribute("class", "spinner d-flex justify-content-center m-50");
+		var ref = document.createElement('div');
+		ref.setAttribute("class", "spinner-border text-light");
+		ref.setAttribute("style", "width: 5rem; height: 5rem;");
+		ref.setAttribute("role", "status");
+		var span = document.createElement('span');
+		span.setAttribute("class", "sr-only");
+		span.appendChild(document.createTextNode("Loading..."));
+		ref.appendChild(span);
+		ctr.appendChild(ref);
+		$( "#testimonial-section" ).prepend(ctr);
+	} else {
+		$( ".spinner" ).remove();
+	}
+}
+
+function setResults(courses) {
+var authDiv = document.createElement('div');
+	authDiv.setAttribute("class", "d-flex justify-content-start");
+	var authImg = document.createElement('img');
+	authImg.setAttribute("class", "circle-thumb-small rounded-circle");
+	authImg.setAttribute("src", courses.author_pic_url);
+	var pAuth = document.createElement('p');
+	pAuth.setAttribute("class", "lavender m-3");
+	pAuth.appendChild(document.createTextNode(courses.author));
+	authDiv.appendChild(authImg);
+	authDiv.appendChild(pAuth);
+	var ratingDiv = document.createElement('div');
+	ratingDiv.setAttribute("class", "d-flex justify-content-space-between");
+	var starDiv = document.createElement('div');
+	starDiv.setAttribute("class", "d-flex justify-content-space-between mr-auto");
+	for (let i=0; i<courses.star;i++) {
+		var starImg = document.createElement('img');
+		starImg.setAttribute("class", "star m-1");
+		starImg.setAttribute("src", "images/star_on.png");
+		starDiv.appendChild(starImg);
+	}
+	for (let z=0; z< 5-courses.star;z++) {
+		var starImg = document.createElement('img');
+		starImg.setAttribute("class", "star m-1");
+		starImg.setAttribute("src", "images/star_off.png");
+		starDiv.appendChild(starImg);
+	}
+	var timeDiv = document.createElement('div');
+	var pTime = document.createElement('p');
+	pTime.setAttribute("class", "lavender text-right");
+	pTime.appendChild(document.createTextNode(courses.duration));
+	ratingDiv.appendChild(starDiv)
+	ratingDiv.appendChild(timeDiv)
+	var bodyDiv = document.createElement('div');
+	bodyDiv.setAttribute("class", "d-card-body text-black");
+	var h3 = document.createElement('h3');
+	h3.setAttribute("class", "card-title font-weight-bold text-black");
+	h3.appendChild(document.createTextNode(courses.title));
+	var pSub = document.createElement('p');
+	pSub.setAttribute("class", "card-text text-secondary");
+	pSub.appendChild(document.createTextNode(courses["sub-title"]));
+	bodyDiv.appendChild(h3);
+	bodyDiv.appendChild(pSub);
+	bodyDiv.appendChild(authDiv);
+	bodyDiv.appendChild(ratingDiv);
+	var vidImg = document.createElement('img');
+	vidImg.setAttribute("class", "card-img-top");
+	vidImg.setAttribute("src", courses.thumb_url);
+	vidImg.setAttribute("alt", "Card image");
+	var iElem = document.createElement('i');
+	iElem.setAttribute("class", "fa fa-play");
+	iElem.setAttribute("aria-hidden", "true");
+	var span = document.createElement('span');
+	span.setAttribute("class", "play-tuto play-button-icon");
+	span.appendChild(iElem);
+	var cardDiv = document.createElement('div');
+	cardDiv.setAttribute("class", "card video-card text-left m-4");
+	cardDiv.appendChild(vidImg);
+	cardDiv.appendChild(span);
+	cardDiv.appendChild(bodyDiv);
+	var contDiv = document.createElement('div');
+	contDiv.setAttribute("class", "col col-sm-0 col-md-4 col-lg-3");
+	contDiv.appendChild(cardDiv);
+	$( ".res-vids" ).append(contDiv);
+}
+
+function setTopSor(top, sor, courses) {
+	for (x=0; x<top.length; x++) {
+		var option = document.createElement('option');
+		option.setAttribute("value", top[x]);		
+		option.appendChild(document.createTextNode(top[x].charAt(0).toUpperCase() + top[x].slice(1)));
+		$(".topic").append(option)
+	}
+	for (x=0; x<sor.length; x++) {
+		var option = document.createElement('option');
+		option.setAttribute("value", sor[x].replace(/_/g, ' '));
+		str = sor[x].charAt(0).toUpperCase() + sor[x].slice(1);
+		option.appendChild(document.createTextNode(str.replace(/_/g, ' ')));
+		$(".sorting").append(option)
+	}
+	if ( courses == 1 ) {
+		$(".results").text(courses + " result found");
+	} else {
+		$(".results").text(courses + " results found");
+	}
+}
+function addQuotes(data) {
+	var imgDiv = document.createElement('div');
+	imgDiv.setAttribute("class", "col-auto");
+	var img = document.createElement('img');
+	img.setAttribute("class", "rounded-circle circle-thumb");
+	img.setAttribute("src", data.pic_url);
+	img.setAttribute("alt", "First slide");
+	var pDiv = document.createElement('div');
+	pDiv.setAttribute("class", "col-sm-8");
+	var p1 = document.createElement('p');
+	p1.setAttribute("class", "mt-4 ml-1 mr-1 w-75");
+	p1.appendChild(document.createTextNode(data.text));
+	var p2 = document.createElement('p');
+	p2.setAttribute("class", "font-weight-bold");
+	p2.appendChild(document.createTextNode(data.name));
+	var p3 = document.createElement('p');
+	p3.setAttribute("class", "font-italic");
+	p3.appendChild(document.createTextNode(data.title));
+	pDiv.appendChild(p1);
+	pDiv.appendChild(p2);
+	pDiv.appendChild(p3);
+	imgDiv.appendChild(img);
+	var imgDivPos = document.createElement('div');
+	imgDivPos.setAttribute("class", "col-sm-1");
+	var div3 = document.createElement('div');
+	div3.setAttribute("class", "row justify-content-center align-items-center pb-5 pl-5 pr-0");
+	div3.appendChild(imgDivPos);
+	div3.appendChild(imgDiv);
+	div3.appendChild(pDiv);
+	var div2 = document.createElement('div');
+	div2.setAttribute("class", "container-fluid");
+	div2.appendChild(div3);
+	var div1 = document.createElement('div');
+	if ( data.x ) {
+		div1.setAttribute("class", "carousel-item");
+	} else {
+		div1.setAttribute("class", "carousel-item active");
+	}
+	div1.appendChild(div2);
+	$( ".testim-add" ).before(div1);
+}
+function addVids(vidData) {
+	var authDiv = document.createElement('div');
+	authDiv.setAttribute("class", "d-flex justify-content-start");
+	var authImg = document.createElement('img');
+	authImg.setAttribute("class", "circle-thumb-small rounded-circle");
+	authImg.setAttribute("src", vidData.author_pic_url);
+	var pAuth = document.createElement('p');
+	pAuth.setAttribute("class", "lavender m-3");
+	pAuth.appendChild(document.createTextNode(vidData.author));
+	authDiv.appendChild(authImg);
+	authDiv.appendChild(pAuth);
+	var ratingDiv = document.createElement('div');
+	ratingDiv.setAttribute("class", "d-flex justify-content-space-between");
+	var starDiv = document.createElement('div');
+	starDiv.setAttribute("class", "d-flex justify-content-space-between mr-auto");
+	for (let i=0; i<vidData.star;i++) {
+		var starImg = document.createElement('img');
+		starImg.setAttribute("class", "star m-1");
+		starImg.setAttribute("src", "images/star_on.png");
+		starDiv.appendChild(starImg);
+	}
+	for (let z=0; z< 5-vidData.star;z++) {
+		var starImg = document.createElement('img');
+		starImg.setAttribute("class", "star m-1");
+		starImg.setAttribute("src", "images/star_off.png");
+		starDiv.appendChild(starImg);
+	}
+	var timeDiv = document.createElement('div');
+	var pTime = document.createElement('p');
+	pTime.setAttribute("class", "lavender text-right");
+	pTime.appendChild(document.createTextNode(vidData.duration));
+	timeDiv.appendChild(pTime)
+	ratingDiv.appendChild(starDiv)
+	ratingDiv.appendChild(timeDiv)
+	var bodyDiv = document.createElement('div');
+	bodyDiv.setAttribute("class", "d-card-body text-black");
+	var h3 = document.createElement('h3');
+	h3.setAttribute("class", "card-title font-weight-bold text-black");
+	h3.appendChild(document.createTextNode(vidData.title));
+	var pSub = document.createElement('p');
+	pSub.setAttribute("class", "card-text text-secondary");
+	pSub.appendChild(document.createTextNode(vidData["sub-title"]));
+	bodyDiv.appendChild(h3);
+	bodyDiv.appendChild(pSub);
+	bodyDiv.appendChild(authDiv);
+	bodyDiv.appendChild(ratingDiv);
+	var vidImg = document.createElement('img');
+	vidImg.setAttribute("class", "card-img-top");
+	vidImg.setAttribute("src", vidData.thumb_url);
+	vidImg.setAttribute("alt", "Card image");
+	var iElem = document.createElement('i');
+	iElem.setAttribute("class", "fa fa-play");
+	iElem.setAttribute("aria-hidden", "true");
+	var span = document.createElement('span');
+	span.setAttribute("class", "play-tuto play-button-icon");
+	span.appendChild(iElem);
+	var cardDiv = document.createElement('div');
+	cardDiv.setAttribute("class", "video-card card text-left");
+	cardDiv.appendChild(vidImg);
+	cardDiv.appendChild(span);
+	cardDiv.appendChild(bodyDiv);
+	var contDiv = document.createElement('div');
+	contDiv.setAttribute("class", "col-3 col-lg-3 col-sm-0 col-sm-6 m-1");
+	contDiv.appendChild(cardDiv);
+	var div1 = document.createElement('div');
+	if ( vidData.x && vidData.type == "tutos") {
+		div1.setAttribute("class", "car-item carousel-item");
+	} else if ( vidData.x == 0 && vidData.type == "tutos") {
+		div1.setAttribute("class", "car-item carousel-item active");
+	} else if ( vidData.x && vidData.type == "latest") {
+		div1.setAttribute("class", "latest-item carousel-item");		
+	} else if ( vidData.x == 0 && vidData.type == "latest") {
+		div1.setAttribute("class", "latest-item carousel-item active");		
+	}
+	div1.appendChild(contDiv);
+	if ( vidData.type == "tutos" ) {
+		$( ".vid-sec" ).append(div1);
+	} else if ( vidData.type == "latest" ) {
+		$( ".latest-vids" ).append(div1);
+	}
+}
+function manCarous(type) { 
+	if ( type == "latest") {
+		$('.latest').carousel({
+			interval: 10000
+		});
+	} else if ( type == "tutos") {
+		$('.car').carousel({
+			interval: 10000
+		});
+	}
+	if ( type == "latest") {
+		$('.latest').carousel({
+			interval: 10000
+		});
+		var type = $('.latest-item');
+	} else if ( type == "tutos") {
+		$('.car').carousel({
+			interval: 10000
+		});
+		var type = $('.car-item');
+	}
+	type.each(function(){
+	    var minPerSlide = 4;
+	    var next = $(this).next();
+	    if (!next.length) {
+	    next = $(this).siblings(':first');
+	    }
+	    next.children(':first-child').clone().appendTo($(this));
+	    
+	    for (var i=0;i<minPerSlide;i++) {
+	        next=next.next();
+	        if (!next.length) {
+	        	next = $(this).siblings(':first');
+	      	}
+	        
+	        next.children(':first-child').clone().appendTo($(this));
+	      }
+	});
+}
+$(document).ready(function(){
+	$("#searchValue").change( function() {
+		getCourses($(this).val(), $(".topic").val(), $(".sorting").val());
+
+	});
+	$(".topic").on("change", function() {
+		getCourses($("#searchValue").val(), $(this).val(), $(".sorting").val());
+	});
+	$(".sorting").on("change", function() {
+		getCourses($("#searchValue").val(), $(".topic").val(), $(this).val());
+	});
+
+});
+
+getQuotes();
+getTutos();
+getLatest();
+getCourses("", "all", "most_popular");
